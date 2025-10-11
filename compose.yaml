@@ -1,0 +1,55 @@
+services:
+  authentication-service:
+    image: authentication-service:latest
+    build:
+     context: services/AuthenticationService
+     dockerfile: Api/Dockerfile
+    environment:
+      - Kestrel__Endpoints__Https__Certificate__Path=${CERTS_PATH}
+      - Kestrel__Endpoints__Https__Certificate__Password=${CERTS_PASSWORD}
+      - ConnectionStrings__AuthDbConnection=Host=authentication-service-database;Port=5432;Database=auth_db;Username=developer;Password=${AUTH_DB_PASSWORD}
+      - ASPNETCORE_ENVIRONMENT=Development
+      - DOTNET_RUNNING_IN_CONTAINER=true
+    ports:
+      - "5000:5000"
+      - "5001:5001"
+    networks:
+      - authentication-public
+      - authentication-internal
+    volumes:
+      - ./certs:/app/certs:ro
+    depends_on:
+      authentication-service-database:
+        condition: service_healthy
+  
+  authentication-service-database:
+    image: postgres:latest
+    container_name: authentication-database
+    environment:
+      POSTGRES_USER: developer
+      POSTGRES_DB: auth_db
+      POSTGRES_PASSWORD: ${AUTH_DB_PASSWORD}
+    networks:
+      - authentication-public
+      - authentication-internal
+    volumes:
+      - auth-db-volume:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U developer -d auth_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    
+networks:
+  authentication-public:
+    driver: bridge
+    internal: false
+  authentication-internal:
+    driver: bridge
+    internal: true
+
+volumes:
+  auth-db-volume:
