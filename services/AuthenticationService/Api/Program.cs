@@ -1,4 +1,10 @@
+using Infrastructure;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<AuthDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("AuthDbConnection")));
 
 builder.Services.AddControllers();
 
