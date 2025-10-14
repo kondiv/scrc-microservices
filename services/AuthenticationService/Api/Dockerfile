@@ -7,10 +7,18 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["Api/Api.csproj", "Api/"]
-RUN dotnet restore "Api/Api.csproj"
+
+COPY ["services/AuthenticationService/Api/Api.csproj", "services/AuthenticationService/Api/"]
+COPY ["services/AuthenticationService/Common/Common.csproj", "services/AuthenticationService/Common/"]
+COPY ["services/AuthenticationService/Domain/Domain.csproj", "services/AuthenticationService/Domain/"]
+COPY ["services/AuthenticationService/Infrastructure/Infrastructure.csproj", "services/AuthenticationService/Infrastructure/"]
+
+COPY ["shared/Shared/Shared.Auth/Shared.Auth.csproj", "shared/Shared/Shared.Auth/"]
+COPY ["shared/Shared/Shared.ResultPattern/Shared.ResultPattern.csproj", "shared/Shared/Shared.ResultPattern/"]
+
+RUN dotnet restore "services/AuthenticationService/Api/Api.csproj"
 COPY . .
-WORKDIR "/src/Api"
+WORKDIR "/src/services/AuthenticationService/Api"
 RUN dotnet build "./Api.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
