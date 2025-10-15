@@ -27,10 +27,9 @@ public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, R
 
         var refreshToken = await _context
             .RefreshTokens
-            .Where(rt => rt.HashToken == hashedToken)
-            .FirstOrDefaultAsync(rt => rt.RevokedAt == null, cancellationToken);
+            .FirstOrDefaultAsync(rt => rt.HashToken == hashedToken, cancellationToken);
 
-        if (refreshToken is null)
+        if (refreshToken is null or { IsExpired: true } or { RevokedAt: not null })
         {
             return Result<string>.Failure(new AuthError("Unauthorized"));
         }

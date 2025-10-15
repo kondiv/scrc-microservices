@@ -90,6 +90,11 @@ public class AuthController : ControllerBase
     {
         HttpContext.Request.Cookies.TryGetValue("refresh_token", out var refreshToken);
 
+        if (refreshToken is null)
+        {
+            return Unauthorized();
+        }
+
         var newRefreshToken = await _mediator.Send(new RefreshTokenCommand(refreshToken),
             cancellationToken);
 
@@ -101,6 +106,8 @@ public class AuthController : ControllerBase
                 HttpOnly = true,
                 Expires = DateTimeOffset.UtcNow.AddDays(30),
             });
+            
+            return NoContent();
         }
 
         return newRefreshToken.Error.ErrorCode switch
