@@ -1,5 +1,6 @@
 ﻿using Api.Features.Tokens.AccessTokens;
 using Api.Features.Tokens.RefreshTokens.Create;
+using Api.Features.Tokens.RefreshTokens.Refresh;
 using Api.Features.Users.LoginUser;
 using Api.Features.Users.RegisterUser;
 using Api.Requests;
@@ -82,5 +83,30 @@ public class AuthController : ControllerBase
         });
 
         return Ok(loginResult.Value);
+    }
+
+    [HttpPost("refresh")]
+    public async Task<ActionResult> RefreshAsync(CancellationToken cancellationToken = default)
+    {
+        HttpContext.Request.Cookies.TryGetValue("refresh_token", out var refreshToken);
+
+        var newRefreshToken = await _mediator.Send(new RefreshTokenCommand(refreshToken),
+            cancellationToken);
+
+        if (newRefreshToken.Succeeded)
+        {
+            HttpContext.Response.Cookies.Append("refresh_token", newRefreshToken.Value, new CookieOptions()
+            {
+                Secure = true,
+                HttpOnly = true,
+                Expires = DateTimeOffset.UtcNow.AddDays(30),
+            });
+        }
+
+        return newRefreshToken.Error.ErrorCode switch
+        {
+            ErrorCode.DbUpdateConcurrency => new BadRequestObjectResult(newRefreshToken.Error.Message),
+            _ => Unauthorized()
+        };
     }
 }
