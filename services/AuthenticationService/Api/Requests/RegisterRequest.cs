@@ -2,4 +2,4 @@
 
 namespace Api.Requests;
 
-public record RegisterRequest(FullName FullName, string Email, string Login, string PlainPassword, string Role);
+public sealed record RegisterRequest(FullName FullName, string Email, string Login, string PlainPassword, string Role);

@@ -8,7 +8,7 @@ using Shared.ResultPattern.Errors;
 
 namespace Api.Features.Tokens.RefreshTokens.Refresh;
 
-public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, Result<string>>
+internal sealed class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, Result<string>>
 {
     private readonly AuthDbContext _context;
     private readonly ITokenHasher _tokenHasher;

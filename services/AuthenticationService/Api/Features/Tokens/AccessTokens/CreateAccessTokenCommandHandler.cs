@@ -9,7 +9,7 @@ using Shared.ResultPattern;
 
 namespace Api.Features.Tokens.AccessTokens;
 
-public class CreateAccessTokenCommandHandler : IRequestHandler<CreateAccessTokenCommand, Result<string>>
+internal sealed class CreateAccessTokenCommandHandler : IRequestHandler<CreateAccessTokenCommand, Result<string>>
 {
     private readonly JwtOptions _jwtOptions;
 

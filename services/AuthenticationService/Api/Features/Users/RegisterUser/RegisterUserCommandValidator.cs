@@ -17,7 +17,7 @@ internal sealed class RegisterUserCommandValidator : AbstractValidator<RegisterU
             .NotEmpty().WithMessage("Email is required")
             .MinimumLength(5).WithMessage("Email must be at least 5 characters")
             .MaximumLength(128).WithMessage("Email must be at most 128 characters")
-            .EmailAddress().WithMessage("Invalid email address");
+            .Must(BeEmail).WithMessage("Invalid email address");
 
         RuleFor(x => x.Login)
             .NotEmpty().WithMessage("Login is required")
@@ -41,6 +41,11 @@ internal sealed class RegisterUserCommandValidator : AbstractValidator<RegisterU
             .Must(BeWithoutWhitespace).WithMessage("Role must not contain whitespaces");
     }
 
+    private static bool BeEmail(string email)
+    {
+        const string pattern = @"^(?!\.)(?![a-zA-Z0-9._%+-]*\.@)(?!.*\.\.)[a-zA-Z0-9._%+-]+@(?!-)(?!.*-)(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$";
+        return Regex.IsMatch(email, pattern);
+    }
     private static bool ContainOnlyAvailableSymbols(string login)
     {
         const string pattern = @"^[a-zA-Z0-9]+$";

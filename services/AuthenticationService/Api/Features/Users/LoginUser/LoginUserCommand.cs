@@ -4,4 +4,4 @@ using Shared.ResultPattern;
 
 namespace Api.Features.Users.LoginUser;
 
-public record LoginUserCommand(string Login, string Password) : IRequest<Result<UserDto>>;
+public sealed record LoginUserCommand(string Login, string Password) : IRequest<Result<UserDto>>;

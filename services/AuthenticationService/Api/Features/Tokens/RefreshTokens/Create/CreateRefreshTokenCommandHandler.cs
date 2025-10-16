@@ -9,7 +9,7 @@ using Shared.ResultPattern;
 
 namespace Api.Features.Tokens.RefreshTokens.Create;
 
-public class CreateRefreshTokenCommandHandler : IRequestHandler<CreateRefreshTokenCommand, Result<string>>
+internal sealed class CreateRefreshTokenCommandHandler : IRequestHandler<CreateRefreshTokenCommand, Result<string>>
 {
     private readonly AuthDbContext _context;
     private readonly ITokenHasher _hasher;

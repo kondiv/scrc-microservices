@@ -8,7 +8,7 @@ using Shared.ResultPattern.Errors;
 
 namespace Api.Features.Users.LoginUser;
 
-public class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, Result<UserDto>>
+internal sealed class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, Result<UserDto>>
 {
     private readonly AuthDbContext _context;
     private readonly IPasswordHasher _passwordHasher;

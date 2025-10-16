@@ -11,7 +11,7 @@ using Shared.ResultPattern.Errors;
 namespace Api.Controllers;
 
 [ApiController]
-public class AuthController : ControllerBase
+internal sealed class AuthController : ControllerBase
 {
     private readonly IMediator _mediator;
 

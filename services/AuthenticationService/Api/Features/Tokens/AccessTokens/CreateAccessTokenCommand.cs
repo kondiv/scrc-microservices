@@ -5,4 +5,4 @@ using Shared.ResultPattern;
 
 namespace Api.Features.Tokens.AccessTokens;
 
-public record CreateAccessTokenCommand(UserDto User) : IRequest<Result<string>>;
+public sealed record CreateAccessTokenCommand(UserDto User) : IRequest<Result<string>>;

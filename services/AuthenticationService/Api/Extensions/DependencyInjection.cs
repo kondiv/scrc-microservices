@@ -4,7 +4,7 @@ using Infrastructure.Security;
 namespace Api.Extensions;
 
 
-public static class DependencyInjection
+internal static class DependencyInjection
 {
     public static IServiceCollection AddServices(this IServiceCollection services)
     {
