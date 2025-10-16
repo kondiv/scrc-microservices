@@ -59,28 +59,22 @@ public class AuthController : ControllerBase
         {
             return Unauthorized(loginResult.Error.Message);
         }
-        
-        var accessTokenResult = await _mediator.Send(new CreateAccessTokenCommand(loginResult.Value), cancellationToken);
-        var refreshTokenResult = await _mediator.Send(new CreateRefreshTokenCommand(loginResult.Value.Id), cancellationToken);
+
+        var tokens = await Task.WhenAll(
+            _mediator.Send(new CreateAccessTokenCommand(loginResult.Value), cancellationToken),
+            _mediator.Send(new CreateRefreshTokenCommand(loginResult.Value.Id), cancellationToken));
+
+        var accessTokenResult = tokens[0];
+        var refreshTokenResult = tokens[1];
 
         if (accessTokenResult.IsFailure || refreshTokenResult.IsFailure)
         {
             return Unauthorized(accessTokenResult.Error.Message);
         }
         
-        HttpContext.Response.Cookies.Append("access_token", accessTokenResult.Value, new CookieOptions()
-        {
-            Expires = DateTimeOffset.UtcNow.AddMinutes(2),
-            HttpOnly = true,
-            Secure = true
-        });
-        
-        HttpContext.Response.Cookies.Append("refresh_token", refreshTokenResult.Value, new CookieOptions()
-        {
-            Expires = DateTimeOffset.UtcNow.AddDays(30),
-            HttpOnly = true,
-            Secure = true
-        });
+        WriteTokenToCookie(HttpContext, "access_token", accessTokenResult.Value, DateTimeOffset.UtcNow.AddMinutes(2));
+        WriteTokenToCookie(HttpContext, "refresh_token", refreshTokenResult.Value,
+            DateTimeOffset.UtcNow.AddDays(30));
 
         return Ok(loginResult.Value);
     }
@@ -100,12 +94,8 @@ public class AuthController : ControllerBase
 
         if (newRefreshToken.Succeeded)
         {
-            HttpContext.Response.Cookies.Append("refresh_token", newRefreshToken.Value, new CookieOptions()
-            {
-                Secure = true,
-                HttpOnly = true,
-                Expires = DateTimeOffset.UtcNow.AddDays(30),
-            });
+            WriteTokenToCookie(HttpContext, "refresh_token", newRefreshToken.Value,
+                DateTimeOffset.UtcNow.AddDays(30));
             
             return NoContent();
         }
@@ -115,5 +105,15 @@ public class AuthController : ControllerBase
             ErrorCode.DbUpdateConcurrency => new BadRequestObjectResult(newRefreshToken.Error.Message),
             _ => Unauthorized()
         };
+    }
+
+    private void WriteTokenToCookie(HttpContext context, string key, string value, DateTimeOffset expiresAt)
+    {
+        context.Response.Cookies.Append(key, value, new CookieOptions()
+        {
+            Secure = true,
+            HttpOnly = true,
+            Expires = expiresAt
+        });
     }
 }
