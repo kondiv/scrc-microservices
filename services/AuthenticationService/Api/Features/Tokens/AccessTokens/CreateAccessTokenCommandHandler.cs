@@ -6,6 +6,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Shared.Auth.Configuration;
 using Shared.ResultPattern;
+using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
 
 namespace Api.Features.Tokens.AccessTokens;
 
@@ -22,6 +23,7 @@ internal sealed class CreateAccessTokenCommandHandler : IRequestHandler<CreateAc
     {
         var claims = new[]
         {
+            new Claim(JwtRegisteredClaimNames.Sub, request.User.Id.ToString()),
             new Claim(ClaimTypes.Email, request.User.Email),
             new Claim(ClaimTypes.Role, request.User.Role)
         };
