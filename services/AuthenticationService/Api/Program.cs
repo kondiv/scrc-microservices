@@ -27,6 +27,8 @@ builder.Services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationPipeli
 
 builder.Services.AddControllers();
 
+builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
@@ -38,8 +40,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseMiddleware<ExceptionHandling>();
-
-app.UseHttpsRedirection();
 
 app.UseAuthentication();
 

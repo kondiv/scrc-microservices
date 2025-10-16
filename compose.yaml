@@ -1,4 +1,29 @@
 services:
+
+  gateway:
+    image: gateway:latest
+    build:
+      context: .
+      dockerfile: gateway/Gateway/Gateway/Dockerfile
+    environment:
+      - ASPNETCORE_URLS=http://+:5000;https://+:5001
+      - Jwt__Issuer=${JWT_ISSUER}
+      - Jwt__Audience=${JWT_AUDIENCE}
+      - Jwt__Key=${JWT_KEY}
+      - Jwt__AccessTokenExpirationMinutes=${ACCESS_TOKEN_LIFETIME}
+      - Jwt__RefreshTokenExpirationDays=${REFRESH_TOKEN_LIFETIME}
+      - Kestrel__Endpoints__Https__Certificate__Path=${CERTS_PATH}
+      - Kestrel__Endpoints__Https__Certificate__Password=${CERTS_PASSWORD}
+      - DOTNET_RUNNING_IN_CONTAINER=true;
+    networks:
+      - public
+      - internal
+    ports:
+      - "5000:5000"
+      - "5001:5001"
+    volumes:
+      - ./certs:/app/certs:ro
+
   authentication-service:
     image: authentication-service:latest
     build:
@@ -6,8 +31,6 @@ services:
      dockerfile: services/AuthenticationService/Api/Dockerfile
     environment:
       - HmacSecret=${HMAC_SECRET}
-      - Kestrel__Endpoints__Https__Certificate__Path=${CERTS_PATH}
-      - Kestrel__Endpoints__Https__Certificate__Password=${CERTS_PASSWORD}
       - Jwt__Issuer=${JWT_ISSUER}
       - Jwt__Audience=${JWT_AUDIENCE}
       - Jwt__Key=${JWT_KEY}
@@ -16,14 +39,11 @@ services:
       - ConnectionStrings__AuthDbConnection=Host=authentication-service-database;Port=5432;Database=auth_db;Username=developer;Password=${AUTH_DB_PASSWORD}
       - ASPNETCORE_ENVIRONMENT=Development
       - DOTNET_RUNNING_IN_CONTAINER=true
-    ports:
-      - "5000:5000"
-      - "5001:5001"
+      - ASPNETCORE_URLS=http://+:80
     networks:
       - public
+      - internal
       - authentication-internal
-    volumes:
-      - ./certs:/app/certs:ro
     depends_on:
       authentication-service-database:
         condition: service_healthy
@@ -48,15 +68,22 @@ services:
       timeout: 5s
       retries: 5
       start_period: 10s
-    
+
 networks:
   public:
     internal: false
+
   internal:
     internal: true
+
   authentication-internal:
+    driver: bridge
+    internal: true
+
+  technical-reports-internal:
     driver: bridge
     internal: true
 
 volumes:
   auth-db-volume:
+  technical-reports-db:
