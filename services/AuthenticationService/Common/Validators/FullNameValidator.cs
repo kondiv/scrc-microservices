@@ -8,12 +8,14 @@ public sealed class FullNameValidator : AbstractValidator<FullName>
     public FullNameValidator()
     {
         RuleFor(x => x.FirstName)
+            .NotNull().WithMessage("First name is required")
             .NotEmpty().WithMessage("First name is required")
             .MinimumLength(2).WithMessage("First name must be at least 2 characters")
             .MaximumLength(40).WithMessage("First name must be at most 40 characters")
             .Must(StartWithUpperLetter).WithMessage("First name must start with upper letter");
         
         RuleFor(x => x.Surname)
+            .NotNull().WithMessage("Surname is required")
             .NotEmpty().WithMessage("Surname is required")
             .MinimumLength(2).WithMessage("Surname must be at least 2 characters")
             .MaximumLength(60).WithMessage("Surname must be at most 60 characters")
@@ -28,6 +30,6 @@ public sealed class FullNameValidator : AbstractValidator<FullName>
 
     private static bool StartWithUpperLetter(string name)
     {
-        return char.IsUpper(name[0]);
+        return !string.IsNullOrWhiteSpace(name) && char.IsUpper(name[0]);
     }
 }
