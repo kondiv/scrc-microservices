@@ -9,6 +9,7 @@ public class RefreshToken
     public DateTimeOffset? RevokedAt { get; private set; }
     public Guid UserId { get; init; }
     public virtual User User { get; private set; } = null!;
+    public bool IsExpired => ExpiresAt < DateTimeOffset.UtcNow;
 
     public RefreshToken(string hashToken, DateTimeOffset expiresAt)
     {
