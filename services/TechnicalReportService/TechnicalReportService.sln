@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechnicalReportService.Api", "TechnicalReportService.Api\TechnicalReportService.Api.csproj", "{4A8A7253-8398-4050-90DD-2B261BC757A8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechnicalReportService.Domain", "TechnicalReportService.Domain\TechnicalReportService.Domain.csproj", "{AEEFEA99-57C9-42CF-8E24-3DBF8783688C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechnicalReportService.Infrastructure", "TechnicalReportService.Infrastructure\TechnicalReportService.Infrastructure.csproj", "{E140D63A-3707-40F2-A758-6BC635031FDF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4A8A7253-8398-4050-90DD-2B261BC757A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A8A7253-8398-4050-90DD-2B261BC757A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A8A7253-8398-4050-90DD-2B261BC757A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A8A7253-8398-4050-90DD-2B261BC757A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AEEFEA99-57C9-42CF-8E24-3DBF8783688C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AEEFEA99-57C9-42CF-8E24-3DBF8783688C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AEEFEA99-57C9-42CF-8E24-3DBF8783688C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AEEFEA99-57C9-42CF-8E24-3DBF8783688C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E140D63A-3707-40F2-A758-6BC635031FDF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E140D63A-3707-40F2-A758-6BC635031FDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E140D63A-3707-40F2-A758-6BC635031FDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E140D63A-3707-40F2-A758-6BC635031FDF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
