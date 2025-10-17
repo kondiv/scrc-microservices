@@ -14,6 +14,7 @@ services:
       - Jwt__RefreshTokenExpirationDays=${REFRESH_TOKEN_LIFETIME}
       - Kestrel__Endpoints__Https__Certificate__Path=${CERTS_PATH}
       - Kestrel__Endpoints__Https__Certificate__Password=${CERTS_PASSWORD}
+      - Kestrel__Endpoints__Https__Url=https://+:5001
       - DOTNET_RUNNING_IN_CONTAINER=true;
     networks:
       - public
@@ -39,11 +40,15 @@ services:
       - ConnectionStrings__AuthDbConnection=Host=authentication-service-database;Port=5432;Database=auth_db;Username=developer;Password=${AUTH_DB_PASSWORD}
       - ASPNETCORE_ENVIRONMENT=Development
       - DOTNET_RUNNING_IN_CONTAINER=true
-      - ASPNETCORE_URLS=http://+:80
+      - ASPNETCORE_URLS=http://authentication-service:8080
     networks:
       - public
       - internal
       - authentication-internal
+    expose:
+      - 8080
+    ports:
+      - "8080:8080"
     depends_on:
       authentication-service-database:
         condition: service_healthy
@@ -56,7 +61,6 @@ services:
       POSTGRES_DB: auth_db
       POSTGRES_PASSWORD: ${AUTH_DB_PASSWORD}
     networks:
-      - public
       - authentication-internal
     volumes:
       - auth-db-volume:/var/lib/postgresql/data
@@ -77,11 +81,6 @@ networks:
     internal: true
 
   authentication-internal:
-    driver: bridge
-    internal: true
-
-  technical-reports-internal:
-    driver: bridge
     internal: true
 
 volumes:
