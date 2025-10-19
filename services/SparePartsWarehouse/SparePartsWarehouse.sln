@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SparePartsWarehouse.Api", "SparePartsWarehouse.Api\SparePartsWarehouse.Api.csproj", "{64603825-137F-4013-B940-00F3E3A8A0C7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SparePartsWarehouse.Domain", "SparePartsWarehouse.Domain\SparePartsWarehouse.Domain.csproj", "{ECFB14A1-D9D8-46AA-A941-CFB026D930A5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{64603825-137F-4013-B940-00F3E3A8A0C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64603825-137F-4013-B940-00F3E3A8A0C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{64603825-137F-4013-B940-00F3E3A8A0C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{64603825-137F-4013-B940-00F3E3A8A0C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ECFB14A1-D9D8-46AA-A941-CFB026D930A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ECFB14A1-D9D8-46AA-A941-CFB026D930A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ECFB14A1-D9D8-46AA-A941-CFB026D930A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ECFB14A1-D9D8-46AA-A941-CFB026D930A5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
