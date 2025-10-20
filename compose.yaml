@@ -52,6 +52,26 @@ services:
     depends_on:
       authentication-service-database:
         condition: service_healthy
+
+  equipment-service:
+    image: equipment-service:latest
+    build:
+      context: .
+      dockerfile: services/EquipmentService/EquipmentService.Api/Dockerfile
+    environment:
+      - ASPNETCORE_URLS=http://+:7070
+      - DOTNET_RUNNING_IN_CONTAINER=true
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=equipment-service-database;Port=5432;Database=equipment;Username=developer;Password=${EQUIPMENT_DB_PASSWORD}
+    networks:
+      - public
+      - internal
+      - equipment-internal
+    ports:
+      - "8081:7070"
+    depends_on:
+      equipment-service-database:
+        condition: service_healthy
   
   authentication-service-database:
     image: postgres:latest
@@ -61,11 +81,33 @@ services:
       POSTGRES_DB: auth_db
       POSTGRES_PASSWORD: ${AUTH_DB_PASSWORD}
     networks:
+      - public
       - authentication-internal
     volumes:
       - auth-db-volume:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U developer -d auth_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+  
+  equipment-service-database:
+    image: postgres:latest
+    container_name: equipment-database
+    environment:
+      POSTGRES_USER: developer
+      POSTGRES_DB: equipment
+      POSTGRES_PASSWORD: ${EQUIPMENT_DB_PASSWORD}
+    networks:
+      - public
+      - equipment-internal
+    volumes:
+      - equipment-db-volume:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U developer -d auth_db"]
       interval: 10s
@@ -83,6 +125,10 @@ networks:
   authentication-internal:
     internal: true
 
+  equipment-internal:
+    internal: true
+
 volumes:
   auth-db-volume:
-  technical-reports-db:
+  technical-reports-volume:
+  equipment-db-volume:
