@@ -4,10 +4,16 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddAuthenticationAndAuthorization(builder.Configuration);
 
-builder.Services.AddReverseProxy()
-    .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("TechnicalSpecialist", policy =>
+        policy.RequireRole("TECHNICALSPECIALIST", "ADMIN"));
+});
 
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddReverseProxy()
+    .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
 
 var app = builder.Build();
 
