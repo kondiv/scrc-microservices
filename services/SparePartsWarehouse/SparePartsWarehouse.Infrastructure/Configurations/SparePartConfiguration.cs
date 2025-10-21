@@ -11,12 +11,18 @@ public sealed class SparePartConfiguration : IEntityTypeConfiguration<SparePart>
         builder.ToTable("spare_parts");
         
         builder.HasKey(x => x.Id);
+
+        builder.HasIndex(x => x.Model);
+        builder.HasIndex(x => new { x.LastUpdatedAt, x.Id }).IsDescending();
         
         builder.Property(x => x.Id).ValueGeneratedNever().HasColumnName("id");
         builder.Property(x => x.Model).HasMaxLength(128).HasColumnName("model");
-        builder.HasMany(x => x.SparePartCompatibleEquipments)
-            .WithOne(x => x.SparePart)
-            .HasForeignKey(x => x.SparePartId)
-            .OnDelete(DeleteBehavior.Cascade);
+        builder.Property(x => x.Amount).IsConcurrencyToken().HasColumnName("amount");
+        builder.Property(x => x.CompatibleEquipmentModels).HasMaxLength(2048).HasColumnName("compatible_equipment_models");
+        builder.Property(x => x.LastUpdatedAt)
+            .ValueGeneratedOnUpdate()
+            .HasDefaultValueSql("now()")
+            .HasColumnName("last_updated_at");
+        builder.Property(x => x.FirstTimeDeliveredAt).HasColumnName("first_time_delivered_at");
     }
 }

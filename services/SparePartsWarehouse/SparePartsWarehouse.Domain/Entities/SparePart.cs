@@ -4,22 +4,32 @@ public sealed class SparePart
 {
     public Guid Id { get; private init; }
     public string Model { get; private init; }
-    public ICollection<SparePartCompatibleEquipment> SparePartCompatibleEquipments { get; private set; }
+    public int Amount { get; private set; }
+    public string CompatibleEquipmentModels { get; private set; }
+    public DateTime FirstTimeDeliveredAt { get; init; }
+    public DateTime LastUpdatedAt { get; set; }
 
-    public SparePart(string model, ICollection<SparePartCompatibleEquipment>? compatibleEquipments)
+    public SparePart(string model, int amount, string compatibleEquipmentModels)
     {
         Id = Guid.NewGuid();
         Model = model;
-        SparePartCompatibleEquipments = compatibleEquipments ?? new List<SparePartCompatibleEquipment>();
+        Amount = amount;
+        CompatibleEquipmentModels = compatibleEquipmentModels;
+        FirstTimeDeliveredAt = LastUpdatedAt = DateTime.UtcNow;
     }
 
-    public void AddCompatibleEquipment(CompatibleEquipment compatibleEquipment)
+    public void IncreaseAmount(int amount)
     {
-        SparePartCompatibleEquipments.Add(new SparePartCompatibleEquipment(this, compatibleEquipment));
+        Amount += amount;
     }
 
-    public void RemoveCompatibleEquipment(CompatibleEquipment compatibleEquipment)
+    public void DecreaseAmount(int amount)
     {
-        SparePartCompatibleEquipments.Remove(new SparePartCompatibleEquipment(this, compatibleEquipment));
+        if (amount > Amount)
+        {
+            throw new InvalidOperationException("Amount cannot be decreased to negative value");
+        }
+
+        Amount -= amount;
     }
 }
