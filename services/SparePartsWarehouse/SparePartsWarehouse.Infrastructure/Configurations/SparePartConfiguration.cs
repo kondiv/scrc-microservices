@@ -12,7 +12,7 @@ public sealed class SparePartConfiguration : IEntityTypeConfiguration<SparePart>
         
         builder.HasKey(x => x.Id);
 
-        builder.HasIndex(x => x.Model);
+        builder.HasIndex(x => x.Model).IsUnique();
         builder.HasIndex(x => new { x.LastUpdatedAt, x.Id }).IsDescending();
         
         builder.Property(x => x.Id).ValueGeneratedNever().HasColumnName("id");

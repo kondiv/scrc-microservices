@@ -6,6 +6,7 @@ namespace SparePartsWarehouse.Infrastructure;
 public sealed class SparePartsWarehouseContext : DbContext
 {
     public DbSet<SparePart> SpareParts => Set<SparePart>();
+    public DbSet<Supply> Supplies => Set<Supply>();
 
     public SparePartsWarehouseContext(DbContextOptions<SparePartsWarehouseContext> options) 
         : base(options)

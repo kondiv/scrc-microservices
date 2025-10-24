@@ -57,12 +57,73 @@ namespace SparePartsWarehouse.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Model");
+                    b.HasIndex("Model")
+                        .IsUnique();
 
                     b.HasIndex("LastUpdatedAt", "Id")
                         .IsDescending();
 
                     b.ToTable("spare_parts", (string)null);
+                });
+
+            modelBuilder.Entity("SparePartsWarehouse.Domain.Entities.Supply", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("ArrivedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("arrived_at");
+
+                    b.Property<DateTime?>("ProcessedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("processed_at");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("supply", (string)null);
+                });
+
+            modelBuilder.Entity("SparePartsWarehouse.Domain.Entities.Supply", b =>
+                {
+                    b.OwnsMany("SparePartsWarehouse.Domain.Entities.SupplyItem", "SupplyItems", b1 =>
+                        {
+                            b1.Property<Guid>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("uuid")
+                                .HasColumnName("id");
+
+                            b1.Property<int>("Amount")
+                                .HasColumnType("integer")
+                                .HasColumnName("amount");
+
+                            b1.Property<string>("CompatibleEquipmentModels")
+                                .IsRequired()
+                                .HasMaxLength(2048)
+                                .HasColumnType("character varying(2048)")
+                                .HasColumnName("compatible_equipment_models");
+
+                            b1.Property<string>("Model")
+                                .IsRequired()
+                                .HasMaxLength(256)
+                                .HasColumnType("character varying(256)")
+                                .HasColumnName("model");
+
+                            b1.Property<Guid>("supply_id")
+                                .HasColumnType("uuid");
+
+                            b1.HasKey("Id");
+
+                            b1.HasIndex("supply_id");
+
+                            b1.ToTable("supply_item", (string)null);
+
+                            b1.WithOwner()
+                                .HasForeignKey("supply_id");
+                        });
+
+                    b.Navigation("SupplyItems");
                 });
 #pragma warning restore 612, 618
         }
