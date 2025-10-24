@@ -22,6 +22,7 @@ internal sealed class SupplyRegisteredEventHandler : INotificationHandler<Supply
 
         var supply = await _context
             .Supplies
+            .Include(s => s.SupplyItems)
             .AsNoTracking()
             .FirstOrDefaultAsync(s => s.Id == notification.SupplyId, cancellationToken);
 

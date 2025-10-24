@@ -27,8 +27,7 @@ internal sealed class RegisterSupplyRequestHandler : IRequestHandler<RegisterSup
     {
         _logger.LogInformation("Registering supply. Arrived at {arrivedAt}", request.ArrivedAt);
         
-        var supply = new Supply(request.ArrivedAt);
-        supply.AddSupplyItems(request.SupplyItems);
+        var supply = new Supply(request.SupplyItems, request.ArrivedAt); 
 
         await _context.Supplies.AddAsync(supply, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
@@ -39,8 +38,9 @@ internal sealed class RegisterSupplyRequestHandler : IRequestHandler<RegisterSup
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
-            throw;
+            _logger.LogError(e, "Error while registering supply. Cannot transfer spare parts from supply entity" +
+                                "to warehouse");
+            return Result.Failure(new Error("Error while registering supply", ErrorCode.SomeError));
         }
 
         return Result.Success();

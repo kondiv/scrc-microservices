@@ -7,9 +7,16 @@ public class Supply
     public DateTime ArrivedAt { get; private set; }
     public DateTime? ProcessedAt { get; private set; }
 
-    public Supply(DateTime arrivedAt)
+    private Supply()
     {
         
+    }
+
+    public Supply(ICollection<SupplyItem> supplyItems, DateTime arrivedAt)
+    {
+        Id = Guid.NewGuid();
+        SupplyItems = supplyItems;
+        ArrivedAt = arrivedAt;
     }
 
     public void AddSupplyItems(ICollection<SupplyItem> supplyItems)
